@@ -15,12 +15,13 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { EDIT_CV_URL, EDIT_PROFILE_URL, NEWCV_URL } from "../config";
+import { EDIT_PROFILE_URL, NEWJOB_URL, EDIT_JOB_URL } from "../config";
 import { Link } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import { postInfo } from "../services/AxiosServices";
 import { AuthContext } from "../contexts/AuthContext";
+import AssignmentInd from "@mui/icons-material/AssignmentInd";
 import LoadingLayer from "../components/LoadingLayer";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -42,10 +43,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function Profile() {
+function CompanyProfile() {
   const [state, setState] = useState();
   const [username, setUsername] = useState();
-  const [CVs, setCVs] = useState([]);
+  const [jobs, setJobs] = useState([]);
   const { loggedInUser } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -100,16 +101,16 @@ function Profile() {
     setIsLoading(true);
     if (loggedInUser) {
       postInfo(
-        "/cv",
+        "/job",
         { id: loggedInUser.id },
         (response) => {
           if (mounted) {
-            setCVs(response.data);
+            setJobs(response.data);
             setIsLoading(false);
           }
         },
         (error) => {
-          setIsLoading(true);
+          setIsLoading(false);
         }
       );
     }
@@ -141,7 +142,7 @@ function Profile() {
             fontWeight={"bold"}
             flexGrow={1}
           >
-            Profile
+            Company Profile
           </Typography>
           <Link to={EDIT_PROFILE_URL} component={RouterLink} underline="none">
             <Button
@@ -158,59 +159,90 @@ function Profile() {
 
         {state && username && (
           <Grid container spacing={1} sx={{ mt: 2 }}>
+            <Grid item container xs={9}>
+              <Grid item xs={3}>
+                <Typography variant="h6" fontWeight={"bold"}>
+                  Username
+                </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="h6" color={"text.secondary"}>
+                  {username}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="h6" fontWeight={"bold"}>
+                  Company Name
+                </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="h6" color={"text.secondary"}>
+                  {state.name}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="h6" fontWeight={"bold"}>
+                  Website
+                </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="h6" color={"text.secondary"}>
+                  {state.website}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="h6" fontWeight={"bold"}>
+                  Email
+                </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="h6" color={"text.secondary"}>
+                  {state.email}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="h6" fontWeight={"bold"}>
+                  Address
+                </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="h6" color={"text.secondary"}>
+                  {state.address}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="h6" fontWeight={"bold"}>
+                  Phone
+                </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="h6" color={"text.secondary"}>
+                  {state.phone}
+                </Typography>
+              </Grid>
+              <Grid item xs={3}>
+                <Typography variant="h6" fontWeight={"bold"}>
+                  Description
+                </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <Typography variant="h6" color={"text.secondary"}>
+                  {state.description}
+                </Typography>
+              </Grid>
+            </Grid>
             <Grid item xs={3}>
-              <Typography variant="h6" fontWeight={"bold"}>
-                Username
-              </Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <Typography variant="h6" color={"text.secondary"}>
-                {username}
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography variant="h6" fontWeight={"bold"}>
-                Name
-              </Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <Typography variant="h6" color={"text.secondary"}>
-                {state.name}
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography variant="h6" fontWeight={"bold"}>
-                Age
-              </Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <Typography variant="h6" color={"text.secondary"}>
-                {state.age}
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography variant="h6" fontWeight={"bold"}>
-                Email
-              </Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <Typography variant="h6" color={"text.secondary"}>
-                {state.email}
-              </Typography>
-            </Grid>
-            <Grid item xs={3}>
-              <Typography variant="h6" fontWeight={"bold"}>
-                Address
-              </Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <Typography variant="h6" color={"text.secondary"}>
-                {state.address}
-              </Typography>
+              <img
+                width="200"
+                height="200"
+                src={state.logo}
+                alt="Company Logo"
+              />
             </Grid>
           </Grid>
         )}
       </Paper>
+
       <Paper
         variant="outlined"
         sx={{
@@ -232,16 +264,16 @@ function Profile() {
             fontWeight={"bold"}
             flexGrow={1}
           >
-            CV List
+            Job List
           </Typography>
-          <Link to={NEWCV_URL} component={RouterLink} underline="none">
+          <Link to={NEWJOB_URL} component={RouterLink} underline="none">
             <Button
               variant="contained"
               color="success"
               disableElevation
               startIcon={<NoteAdd />}
             >
-              New CV
+              New Job
             </Button>
           </Link>
         </Box>
@@ -255,14 +287,14 @@ function Profile() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {CVs.map((cv) => (
-                <StyledTableRow key={cv.id}>
+              {jobs.map((job) => (
+                <StyledTableRow key={job.id}>
                   <StyledTableCell align="center" component="th" scope="row">
-                    {cv.cvName}
+                    {job.name}
                   </StyledTableCell>
                   <StyledTableCell align="center">
                     <Link
-                      to={`/cvs/${cv.id}`}
+                      to={`/jobs/${job.id}`}
                       component={RouterLink}
                       underline="none"
                     >
@@ -275,8 +307,8 @@ function Profile() {
                       </Button>
                     </Link>
                     <Link
-                      to={EDIT_CV_URL}
-                      state={{ cvId: cv.id }}
+                      to={EDIT_JOB_URL}
+                      state={{ jobId: job.id }}
                       component={RouterLink}
                       underline="none"
                     >
@@ -286,6 +318,19 @@ function Profile() {
                         sx={{ mr: 3 }}
                       >
                         Edit
+                      </Button>
+                    </Link>
+                    <Link
+                      to={`/jobs/${job.id}/applicants`}
+                      component={RouterLink}
+                      underline="none"
+                    >
+                      <Button
+                        color="success"
+                        startIcon={<AssignmentInd />}
+                        sx={{ mr: 3 }}
+                      >
+                        Applicants
                       </Button>
                     </Link>
                   </StyledTableCell>
@@ -300,4 +345,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default CompanyProfile;
